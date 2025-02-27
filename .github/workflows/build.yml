@@ -12,9 +12,9 @@ jobs:
     - name: Install dependencies
       run: pip install pyinstaller
     - name: Build EXE
-      run: pyinstaller --onefile your_script.py
+      run: pyinstaller --onefile main.py
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # Updated to v4
       with:
         name: exe-file
         path: dist/
