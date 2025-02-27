@@ -16,11 +16,7 @@ jobs:
         pip install --user pyinstaller
     - name: Build EXE
       run: |
-          pyinstaller \
-            --onefile \
-            --hidden-import pydicom.uid \
-            --collect-data pydicom \
-            main.py
+          pyinstaller --onefile --hidden-import pydicom.uid --collect-data pydicom main.py
     - name: Upload artifact
       uses: actions/upload-artifact@v4  # Updated to v4
       with:
