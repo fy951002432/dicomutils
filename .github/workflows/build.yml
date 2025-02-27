@@ -13,6 +13,7 @@ jobs:
       run: |
         Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
         pip install --user -r requirements.txt  # 关键修复：添加 --user
+        pip install --user pylibjpeg pylibjpeg-openjpeg  # 明确安装
         pip install --user pyinstaller
     - name: Build EXE
       run: |

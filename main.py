@@ -7,7 +7,11 @@ from PIL import Image
 import numpy as np
 import logging
 from datetime import datetime
+from pydicom.config import enforce_valid_values
 
+# 强制使用 pylibjpeg 解码器
+enforce_valid_values()
+pydicom.config.pixel_data_handlers.util.reset_pixel_data_handler("pylibjpeg")
 
 # 初始化全局变量
 input_folder = None
