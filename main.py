@@ -7,11 +7,11 @@ from PIL import Image
 import numpy as np
 import logging
 from datetime import datetime
-from pydicom.config import enforce_valid_values
+# from pydicom.config import enforce_valid_values
 import json  # 导入 json 模块用于保存和读取目录信息
 
 # 强制使用 pylibjpeg 解码器
-enforce_valid_values()
+# enforce_valid_values()
 pydicom.config.pixel_data_handlers.util.reset_pixel_data_handler("pylibjpeg")
 
 # 定义默认目录
