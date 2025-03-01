@@ -12,12 +12,13 @@ import json  # 导入 json 模块用于保存和读取目录信息
 
 # 强制使用 pylibjpeg 解码器
 # enforce_valid_values()
-# pydicom.config.pixel_data_handlers.util.reset_pixel_dat a_handler("pylibjpeg")
+pydicom.config.pixel_data_handlers.util.reset_pixel_data_handler("pylibjpeg")
 
 # 定义默认目录
 DEFAULT_FOLDERS = {
     "input_folder": "./input",
     "dicom_output_folder": "./output",
+    "png_output_folder": "./image",
     "log_folder": "./log",
     "structured_info_folder": "./txt"
 }
@@ -25,6 +26,7 @@ DEFAULT_FOLDERS = {
 # 初始化全局变量
 input_folder = None
 dicom_output_folder = None
+png_output_folder = None
 log_folder = None
 structured_info_folder = None  # 结构化信息输出目录
 
@@ -45,6 +47,7 @@ def save_folder_info(folders):
 folder_info = load_folder_info()
 input_folder = folder_info.get("input_folder", DEFAULT_FOLDERS["input_folder"])
 dicom_output_folder = folder_info.get("dicom_output_folder", DEFAULT_FOLDERS["dicom_output_folder"])
+png_output_folder = folder_info.get("png_output_folder", DEFAULT_FOLDERS["png_output_folder"])
 log_folder = folder_info.get("log_folder", DEFAULT_FOLDERS["log_folder"])
 structured_info_folder = folder_info.get("structured_info_folder", DEFAULT_FOLDERS["structured_info_folder"])
 
@@ -127,6 +130,17 @@ def select_dicom_output_folder():
         save_folder_info(folder_info)
 
 
+def select_png_output_folder():
+    """选择转换后的 PNG 文件输出文件夹"""
+    global png_output_folder
+    folder = filedialog.askdirectory(initialdir=png_output_folder)
+    if folder:
+        png_output_folder = folder
+        png_output_label.config(text=f"PNG 输出文件夹: {png_output_folder}")
+        folder_info["png_output_folder"] = png_output_folder
+        save_folder_info(folder_info)
+
+
 def select_log_folder():
     """选择日志文件夹"""
     global log_folder
@@ -174,6 +188,11 @@ def modify_dicom_tags():
     pass # function body is omitted
 
 
+def convert_dicom_to_png():
+    """将 DICOM 文件转换为 PNG"""
+    pass # function body is omitted
+
+
 def save_structured_info():
     """为每个 DICOM 文件单独保存结构化信息"""
     pass # function body is omitted
@@ -199,15 +218,20 @@ dicom_output_label.grid(row=1, column=0, padx=5, pady=5, sticky="w")
 dicom_output_button = tk.Button(folder_frame, text="选择", command=select_dicom_output_folder)
 dicom_output_button.grid(row=1, column=1, padx=5, pady=5)
 
+png_output_label = tk.Label(folder_frame, text=f"PNG 输出文件夹: {png_output_folder}")
+png_output_label.grid(row=2, column=0, padx=5, pady=5, sticky="w")
+png_output_button = tk.Button(folder_frame, text="选择", command=select_png_output_folder)
+png_output_button.grid(row=2, column=1, padx=5, pady=5)
+
 structured_info_label = tk.Label(folder_frame, text=f"结构化信息输出文件夹: {structured_info_folder}")
-structured_info_label.grid(row=2, column=0, padx=5, pady=5, sticky="w")
+structured_info_label.grid(row=3, column=0, padx=5, pady=5, sticky="w")
 structured_info_button = tk.Button(folder_frame, text="选择", command=select_structured_info_folder)
-structured_info_button.grid(row=2, column=1, padx=5, pady=5)
+structured_info_button.grid(row=3, column=1, padx=5, pady=5)
 
 log_label = tk.Label(folder_frame, text=f"日志文件夹: {log_folder}")
-log_label.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+log_label.grid(row=4, column=0, padx=5, pady=5, sticky="w")
 log_button = tk.Button(folder_frame, text="选择", command=select_log_folder)
-log_button.grid(row=3, column=1, padx=5, pady=5)
+log_button.grid(row=4, column=1, padx=5, pady=5)
 
 # 配置化修改 DICOM 标签
 config_frame = ttk.LabelFrame(root, text="DICOM匿名化字段配置")
@@ -249,6 +273,9 @@ button_frame.pack(pady=10, padx=10, fill=tk.X)
 
 modify_button = tk.Button(button_frame, text="DICOM文件匿名化", command=modify_dicom_tags)
 modify_button.pack(side=tk.LEFT, padx=10)
+
+convert_button = tk.Button(button_frame, text="转换为 PNG", command=convert_dicom_to_png)
+convert_button.pack(side=tk.LEFT, padx=10)
 
 info_button = tk.Button(button_frame, text="保存结构化信息", command=save_structured_info)
 info_button.pack(side=tk.LEFT, padx=10)
